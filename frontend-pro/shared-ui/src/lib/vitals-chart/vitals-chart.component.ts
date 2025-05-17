@@ -33,7 +33,16 @@ ChartJS.register(
   standalone: true,
 })
 export class VitalsChartComponent {
-  @Input() data: number[] = [];
-  @Input() labels: string[] = [];
-  @Input() metric = '';
+  // @Input() data: number[] = [];
+  // @Input() labels: string[] = [];
+  // @Input() metric = '';
+  @Input() data: { name: string; value: number }[] = [];
+
+  get labels(): string[] {
+    return this.data.map(d => d.name);
+  }
+
+  get values(): number[] {
+    return this.data.map(d => d.value);
+  }
 }

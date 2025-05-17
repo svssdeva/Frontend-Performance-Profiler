@@ -1,4 +1,15 @@
-<canvas baseChart
-        [datasets]="[{ data: data, label: metric }]"
-        [labels]="labels"
-        chartType="line"></canvas>
+<!--<canvas baseChart-->
+<!--        [datasets]="[{ data: data, label: metric }]"-->
+<!--        [labels]="labels"-->
+<!--        chartType="line"></canvas>-->
+
+@if (data?.length) {
+  <canvas
+    baseChart
+    [data]="{
+          labels: labels,
+          datasets: [{ data: values, label: 'Core Web Vitals' }]
+        }"
+    [type]="'bar'">
+  </canvas>
+}

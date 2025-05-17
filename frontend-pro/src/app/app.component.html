@@ -1,6 +1,9 @@
-<h1>Performance Profiler</h1>
-<lib-vitals-chart
-  [data]="data"
-  [labels]="labels"
-  [metric]="'LCP / CLS / FID'">
-</lib-vitals-chart>
+<div class="container">
+  <h1>Frontend Performance Profiler</h1>
+
+  <input type="file" accept=".json" (change)="onFileChange($event)" />
+
+  <ng-container *ngIf="metrics$ | async as metrics">
+    <lib-vitals-chart [data]="metrics"></lib-vitals-chart>
+  </ng-container>
+</div>
