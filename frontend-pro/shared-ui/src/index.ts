@@ -1,1 +1,1 @@
-export * from './lib/vitals-chart/vitals-chart.component'
+export * from './lib/vitals-new/vitals-new.component'

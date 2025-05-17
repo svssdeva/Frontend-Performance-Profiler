@@ -1,1 +1,1 @@
-export * from './lib/perf-observer.service'
+export * from './lib/perf-observer-new.service'

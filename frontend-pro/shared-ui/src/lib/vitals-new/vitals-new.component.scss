@@ -1,0 +1,47 @@
+.chart-container {
+  height: 300px;
+  margin-bottom: 20px;
+}
+
+.metrics-table {
+  margin-top: 20px;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f5f5f5;
+      font-weight: bold;
+    }
+
+    tr.good {
+      background-color: rgba(75, 192, 75, 0.1);
+    }
+
+    tr.needs-improvement {
+      background-color: rgba(255, 205, 86, 0.1);
+    }
+
+    tr.poor {
+      background-color: rgba(255, 99, 132, 0.1);
+    }
+  }
+}
+
+.no-data {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  color: #666;
+  font-style: italic;
+}

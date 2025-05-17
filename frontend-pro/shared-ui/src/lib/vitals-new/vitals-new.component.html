@@ -1,0 +1,92 @@
+@if (data?.length) {
+  <div class="chart-container">
+    <canvas
+      baseChart
+      [data]="{
+        labels: labels,
+        datasets: [{
+          data: values,
+          label: 'Core Web Vitals',
+          backgroundColor: backgroundColors,
+          borderColor: borderColors,
+          borderWidth: 1
+        }]
+      }"
+      [options]="chartOptions"
+      [type]="'bar'"
+    >
+    </canvas>
+  </div>
+
+  <div class="metrics-table">
+    <table>
+      <thead>
+      <tr>
+        <th>Metric</th>
+        <th>Value</th>
+        <th>Status</th>
+        <th>Recommendation</th>
+      </tr>
+      </thead>
+      <tbody>
+        @for (metric of data; track metric.name) {
+          <tr [class]="metric.status">
+            <td>{{ metric.name }}</td>
+            <td>{{ metric.value }}{{ metric.unit }}</td>
+            <td>{{ metric.status | titlecase }}</td>
+            <td>
+              @switch (metric.name) {
+                @case ('FCP') {
+                  @if (metric.status !== 'good') {
+                    Optimize server response time, reduce render-blocking resources
+                  } @else {
+                    Good performance
+                  }
+                }
+                @case ('LCP') {
+                  @if (metric.status !== 'good') {
+                    Optimize images, preload key resources, improve server response time
+                  } @else {
+                    Good performance
+                  }
+                }
+                @case ('CLS') {
+                  @if (metric.status !== 'good') {
+                    Set dimensions for images/videos, avoid inserting content above existing content
+                  } @else {
+                    Good performance
+                  }
+                }
+                @case ('FID') {
+                  @if (metric.status !== 'good') {
+                    Break up long tasks, optimize JavaScript execution, minimize main thread work
+                  } @else {
+                    Good performance
+                  }
+                }
+                @case ('INP') {
+                  @if (metric.status !== 'good') {
+                    Optimize event handlers, reduce JavaScript execution time
+                  } @else {
+                    Good performance
+                  }
+                }
+                @default {
+                  @if (metric.status !== 'good') {
+                    Review performance optimizations
+                  } @else {
+                    Good performance
+                  }
+                }
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+} @else {
+  <div class="no-data">
+    <p>No Core Web Vitals data available. Please upload a trace file.</p>
+  </div>
+}

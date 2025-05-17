@@ -1,35 +1,48 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import {VitalsChartComponent} from '@frontend-pro/shared-ui';
-import { PerfObserverService } from '@frontend-pro/core';
+
+import {PerfObserverNewService, WebVitalMetric } from '@frontend-pro/core';
 import { Observable } from 'rxjs';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe, JsonPipe } from '@angular/common';
+import { VitalsNewComponent } from '@frontend-pro/shared-ui';
 
 
 @Component({
-  imports: [RouterModule, VitalsChartComponent, NgIf, AsyncPipe],
+  imports: [RouterModule, VitalsNewComponent, AsyncPipe, JsonPipe],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
-  // data: number[] = [];
-  // labels: string[] = [];
-  perfSvc = inject(PerfObserverService);
-  metrics$: Observable<{ name: string; value: number }[]> | undefined;
+  rawEvents: any[] = [];
+  perfService = inject(PerfObserverNewService);
+  metrics$: Observable<WebVitalMetric[]> = this.perfService.metrics$;
+  // metrics$: Observable<{ name: string; value: number }[]> | undefined;
 
-  onFileChange(event: Event): void {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) {
-      this.perfSvc.parseTraceFile(file);
+  async ngOnInit() {
+    this.perfService.rawEvents$.subscribe((events) => {
+      this.rawEvents = events;
+    });
+  }
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+
+      // Check if it's a JSON file
+      if (file.type === 'application/json' || file.name.endsWith('.json')) {
+        this.perfService.parseTraceFile(file);
+      } else {
+        alert('Please select a valid JSON trace file from Chrome DevTools.');
+      }
     }
   }
 
-  async ngOnInit() {
-    // this.perfSvc.vitalsObs$.subscribe(entries => {
-    //   this.data = entries.map((e: any) => e.value || 0);
-    //   this.labels = entries.map((e: any) => e.name || e.entryType);
-    // });
-    this.metrics$ = this.perfSvc.metrics$;
+  startMonitoring(): void {
+    this.perfService.startRealTimeMonitoring();
+    alert(
+      'Real-time monitoring started. Performance metrics will update as they are collected.'
+    );
   }
 }

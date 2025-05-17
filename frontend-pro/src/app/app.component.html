@@ -1,9 +1,56 @@
-<div class="container">
-  <h1>Frontend Performance Profiler</h1>
+<!--<div class="container">-->
+<!--  <h1>Frontend Performance Profiler</h1>-->
 
-  <input type="file" accept=".json" (change)="onFileChange($event)" />
+<!--  <input type="file" accept=".json" (change)="onFileChange($event)" />-->
 
-  <ng-container *ngIf="metrics$ | async as metrics">
-    <lib-vitals-chart [data]="metrics"></lib-vitals-chart>
-  </ng-container>
+<!--  <ng-container *ngIf="metrics$ | async as metrics">-->
+<!--    <lib-vitals-chart [data]="metrics"></lib-vitals-chart>-->
+<!--  </ng-container>-->
+<!--</div>-->
+
+<div class="dashboard-container">
+  <h1>Core Web Vitals Dashboard</h1>
+
+  <div class="upload-section">
+    <h2>Upload Chrome DevTools Trace</h2>
+    <p>Export a trace file from Chrome DevTools Performance tab and upload it here.</p>
+
+    <div class="file-upload">
+      <label for="trace-file">Choose a trace file:</label>
+      <input type="file" id="trace-file" accept=".json" (change)="onFileSelected($event)">
+    </div>
+
+    <div class="instructions">
+      <h3>How to get a trace file:</h3>
+      <ol>
+        <li>Open Chrome DevTools (F12 or Ctrl+Shift+I)</li>
+        <li>Go to the Performance tab</li>
+        <li>Click "Record" and load your page</li>
+        <li>Stop the recording</li>
+        <li>Right-click on the timeline and select "Save profile..."</li>
+        <li>Upload the saved JSON file here</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="results-section">
+    <h2>Performance Metrics</h2>
+    <lib-vitals-new [data]="(metrics$ | async) ?? []"></lib-vitals-new>
+  </div>
+
+  <div class="realtime-section">
+    <h2>Real-time Monitoring</h2>
+    <button class="monitor-button" (click)="startMonitoring()">Start Monitoring Current Page</button>
+    <p class="note">Note: This will capture real-time performance metrics for the current page.</p>
+  </div>
+
+  @if (rawEvents.length) {
+    <div class="raw-data-section">
+      <h2>Raw Event Data</h2>
+      <details>
+        <summary>Show/Hide Raw Data</summary>
+        <pre>{{ rawEvents | json }}</pre>
+      </details>
+    </div>
+  }
 </div>
