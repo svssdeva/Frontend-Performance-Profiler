@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class PerfObserverService {
   ignoreKeywords = ['disabled-by-default-devtools.timeline', '__metadata', 'v8'];
-  useFullNames = ['PaintTimingVisualizer::Viewport', 'LayoutShift', 'UkmPageLoadTimingUpdate']
+  useFullNames = ['UkmPageLoadTimingUpdate']
   //
   // private vitals$ = new BehaviorSubject<any[]>([]);
   // vitalsObs$ = this.vitals$.asObservable();
@@ -41,15 +41,14 @@ export class PerfObserverService {
       events = events.filter((event: { name: string; }) => this.useFullNames.includes(event.name));
       console.log(JSON.stringify(events));
       console.log(events);
-      const lcp = events.find((e: any) => e.name.includes('largest-contentful-paint'));
-      const fid = events.find((e: any) => e.name.includes('first-input'));
-      const clsEvents = events.filter((e: any) => e.name.includes('layout-shift') && !e.args?.data?.had_recent_input);
-      const cls = clsEvents.reduce((sum: number, e: any) => sum + (e.args?.data?.score || 0), 0);
-      console.log(lcp, fid, cls);
+      const fcp = events.find((e: any) => e.args.ukm_page_load_timing_update).args.ukm_page_load_timing_update.first_contentful_paint_ms;
+      const lcp = events.find((e: any) => e.args.ukm_page_load_timing_update).args.ukm_page_load_timing_update.latest_largest_contentful_paint_ms;
+      const cls = events.find((e: any) => e.args.ukm_page_load_timing_update).args.ukm_page_load_timing_update.latest_cumulative_layout_shift;
+      console.log(fcp, lcp, cls);
       const results = [
-        { name: 'LCP', value: lcp?.ts ? Math.round(lcp.ts / 1000) : 0 },
-        { name: 'FID', value: fid?.ts ? Math.round(fid.ts / 1000) : 0 },
-        { name: 'CLS', value: Math.round(cls * 1000) / 1000 },
+        { name: 'FCP', value: fcp ? Math.round(fcp / 1000) : 0 },
+        { name: 'LCP', value: lcp ? Math.round(lcp / 1000) : 0 },
+        { name: 'CLS', value: cls * 1000 },
       ];
 
       this.metricsSubject.next(results);
