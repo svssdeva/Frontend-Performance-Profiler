@@ -1,2 +1,6 @@
-<app-nx-welcome></app-nx-welcome>
-<router-outlet></router-outlet>
+<h1>Performance Profiler</h1>
+<lib-vitals-chart
+  [data]="data"
+  [labels]="labels"
+  [metric]="'LCP / CLS / FID'">
+</lib-vitals-chart>

@@ -1,0 +1,1 @@
+export * from './lib/vitals-chart/vitals-chart.component'
